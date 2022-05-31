@@ -1,4 +1,4 @@
-# E_commerce_Frontend
+# GameZone_MS_Frontend
 
 Componente web para aplicación de sistema de gestion de inventario para manipulación de los datos de la aplicación E-commerce GameZone desarrollado en Vue.js junto con Boostrap 4.
 
