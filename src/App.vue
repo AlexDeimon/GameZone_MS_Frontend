@@ -10,11 +10,11 @@
     </nav>  
     <input type="checkbox" class="toggle-menu_checkbox" id="toggle-menu_checkbox" v-if="is_auth">
     <ul class="nav-menu" id="nav-menu" v-if="is_auth">
-      <li class="nav-menu_item"><router-link to="/Productos" class="nav-menu_button btn1">Productos</router-link></li>
-      <li class="nav-menu_item"><router-link to="/Carrito" class="nav-menu_button btn2">Carrito</router-link></li>
-      <li class="nav-menu_item"><router-link to="/Clientes" class="nav-menu_button btn3">Cliente</router-link></li>
-      <li class="nav-menu_item"><router-link to="/Compras" class="nav-menu_button btn4">Compra</router-link></li>
-      <li class="nav-menu_item"><button v-on:click="logOut" class="nav-menu_button btn5">Salir</button></li>
+      <li class="nav-menu_item" v-on:click="menu"><router-link to="/Productos" class="nav-menu_button btn1">Productos</router-link></li>
+      <li class="nav-menu_item" v-on:click="menu"><router-link to="/Carrito" class="nav-menu_button btn2">Carrito</router-link></li>
+      <li class="nav-menu_item" v-on:click="menu"><router-link to="/Clientes" class="nav-menu_button btn3">Cliente</router-link></li>
+      <li class="nav-menu_item" v-on:click="menu"><router-link to="/Compras" class="nav-menu_button btn4">Compra</router-link></li>
+      <li class="nav-menu_item" v-on:click="menu"><button v-on:click="logOut" class="nav-menu_button btn5">Salir</button></li>
     </ul>
   </header>
   <main>
@@ -40,6 +40,11 @@ export default defineComponent({
       }  
   },
   methods:{
+    menu: function(){
+      let list = document.getElementById('toggle-menu_checkbox');
+      console.log('click');
+      list.click();
+    },
     updateAuth: function(){
       this.is_auth  = sessionStorage.getItem('isAuth') || false
       if(this.is_auth == false)
@@ -80,26 +85,25 @@ main {
   align-items: center;
   vertical-align: center;
 }
-.header {
-  position: relative;
+.header{
   background-color: black;
-  height: 90px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav{
+  flex-wrap: nowrap;
 }
 .nav-menu {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform: translateY(-140%);
-  transition: transform 0.5s;
-  background-color: black;
-  width: 100%;
-  padding-left: 0;
-  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
   font-size: large;
 }
 .nav-menu_item {
-  padding: 0.5em;
+  padding: 20px 0;
+  margin: 0 10px;
+  display:inline-block;
 }
 .nav-menu_button {
   border: 1px solid #E5E7E9;
@@ -144,41 +148,58 @@ main {
   text-decoration: none;
   color: white;
 }
-.toggle-menu {
-  width: 40px;
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  cursor: pointer;
-  filter: invert(1);
-}
-.toggle-menu img {
-  max-width: 100%;
-}
 .toggle-menu_checkbox {
   display: none;
+} 
+.toggle-menu img{
+  display: none;
 }
-.toggle-menu_checkbox:checked + .nav-menu {
-  position: relative;
-  transform: translateY(4%);
-  z-index: 10;
-}
-@media screen and (min-width: 768px) {
-  .nav-menu {
-    flex-direction: row;
-    transform: translateY(0%);
-    width: auto;
+@media screen and (max-width: 830px) {
+  .header, footer {
+    height: 10vh;
   }
-  .toggle-menu {
-    display: none;
-  }
-  .header {
+  .header .nav{
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
   }
+  .nav-menu {
+    position: absolute;
+    top: 10vh;
+    width: 100vw;
+    height: 90vh;
+    background-color: #000000;
+    text-align: center;
+    transform: translateX(-100vw);
+    transition: all 1s;
+    z-index: 10;
+  }
+  .nav-menu_item {
+    padding: 0;
+    margin: 0;
+    display:inherit;
+    background-color: inherit;
+    border: none;
+  }
+  .toggle-menu{
+    height: 40px;
+  }
+  .toggle-menu img{
+    display: block;
+    max-width: 40px;
+    margin-right: 20px;
+    filter: invert(1);
+  }
   .toggle-menu_checkbox:checked + .nav-menu {
-    transform: translateY(0%);
+    transform: translateX(0);
+    transition: all 1s;
+  }
+  .nav-menu_item .nav-menu_button{
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    padding: 10px;
   }
 }
 .input-group-text {
