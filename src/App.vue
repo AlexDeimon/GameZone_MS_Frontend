@@ -76,6 +76,7 @@ body {
   margin: 0;
 }
 main {
+  padding: 10px 0;
   position: relative;
   background-image: url("assets/GZ02.jpg");
   background-size: cover;
@@ -155,9 +156,6 @@ main {
   display: none;
 }
 @media screen and (max-width: 830px) {
-  .header, footer {
-    height: 10vh;
-  }
   .header .nav{
     display: flex;
     width: 100%;
@@ -166,9 +164,9 @@ main {
   }
   .nav-menu {
     position: absolute;
-    top: 10vh;
+    top: 72px;
     width: 100vw;
-    height: 90vh;
+    height: 85vh;
     background-color: #000000;
     text-align: center;
     transform: translateX(-100vw);
