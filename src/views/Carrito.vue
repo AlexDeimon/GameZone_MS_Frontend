@@ -182,11 +182,12 @@
         </div>
   </div>
 </template>
-<script lang="ts">
+<script>
 import axios from 'axios';
 import { defineComponent } from 'vue';
 import Swal from 'sweetalert2'
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: "Carrito",
     data: function(){
         return{
@@ -225,7 +226,7 @@ export default defineComponent({
         },
         createCarrito(){
             var carrito = this.carrito;
-            axios.post("https://gamezone-e-commerce-backend.herokuapp.com/crearCarrito/" + (Math.random().toString(10).slice(-4)).toString(), carrito).then((response) => {
+            axios.post("https://ecommercebackend-production-2c76.up.railway.app/crearCarrito/" + (Math.random().toString(10).slice(-4)).toString(), carrito).then((response) => {
                 this
                 console.log(response, carrito);
                 Swal.fire({
@@ -242,7 +243,7 @@ export default defineComponent({
         },
         deleteCarrito(){
             var carrito = this.carrito;
-            axios.delete("https://gamezone-e-commerce-backend.herokuapp.com/eliminarCarrito/" + carrito.id).then((response) => {
+            axios.delete("https://ecommercebackend-production-2c76.up.railway.app/eliminarCarrito/" + carrito.id).then((response) => {
                 this
                 console.log(response);
                 Swal.fire({
@@ -260,7 +261,7 @@ export default defineComponent({
         addProduct(){
             var carrito = this.carrito;
             var product = this.product;
-            axios.put("https://gamezone-e-commerce-backend.herokuapp.com/añadirProducto/" + carrito.id +"/"+ product.producto +"/"+ this.cantidadProducto).then((response) => {
+            axios.put("https://ecommercebackend-production-2c76.up.railway.app/añadirProducto/" + carrito.id +"/"+ product.producto +"/"+ this.cantidadProducto).then((response) => {
                 this
                 console.log(response, carrito);
                 Swal.fire({
@@ -278,7 +279,7 @@ export default defineComponent({
         removeProduct(){
             var carrito = this.carrito;
             var product = this.product;
-            axios.put("https://gamezone-e-commerce-backend.herokuapp.com/borrarProducto/" + carrito.id +"/"+ product.producto).then((response) => {
+            axios.put("https://ecommercebackend-production-2c76.up.railway.app/borrarProducto/" + carrito.id +"/"+ product.producto).then((response) => {
                 this
                 console.log(response, carrito);
                 Swal.fire({
@@ -295,7 +296,7 @@ export default defineComponent({
         },
         searchCarrito(){
             var carrito = this.carrito;
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verCarrito/" + carrito.id).then((response) => {
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verCarrito/" + carrito.id).then((response) => {
                 this.carrito = response.data;
                 console.log(response, carrito);
                 }).catch(function(error){
@@ -308,7 +309,7 @@ export default defineComponent({
         },
         allCarritos(){
             this.carritos_list = [];
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verCarritos").then((response) => {this.carritos_list = response.data}).catch(function(error){
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verCarritos").then((response) => {this.carritos_list = response.data}).catch(function(error){
                 console.log(error);
                 Swal.fire({
                     icon: 'error',

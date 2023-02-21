@@ -399,11 +399,12 @@
         </div>
   </div>
 </template>
-<script lang="ts">
+<script>
 import axios from 'axios';
 import { defineComponent } from 'vue';
 import Swal from 'sweetalert2';
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: "Clientes",
     data: function(){
         return{
@@ -441,7 +442,7 @@ export default defineComponent({
         },
         newClient(){
             var cliente = this.cliente;
-            axios.post("https://gamezone-e-commerce-backend.herokuapp.com/nuevoCliente/"+ cliente.idCliente +"/"+ cliente.idCarrito, cliente).then((response) => {
+            axios.post("https://ecommercebackend-production-2c76.up.railway.app/nuevoCliente/"+ cliente.idCliente +"/"+ cliente.idCarrito, cliente).then((response) => {
                 this
                 console.log(response, cliente);
                 Swal.fire({
@@ -458,7 +459,7 @@ export default defineComponent({
         },
         searchCliente(){
             var cliente = this.cliente;
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verCliente/" + cliente.idCliente).then((response) => {
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verCliente/" + cliente.idCliente).then((response) => {
                 this.cliente = response.data;
                 console.log(response, cliente);
                 }).catch(function(error){
@@ -471,7 +472,7 @@ export default defineComponent({
         },
         updateClient(){
             var cliente = this.cliente;
-            axios.put('https://gamezone-e-commerce-backend.herokuapp.com/actualizarCliente/' + cliente.idCliente, cliente).then((response) => {
+            axios.put('https://ecommercebackend-production-2c76.up.railway.app/actualizarCliente/' + cliente.idCliente, cliente).then((response) => {
                 this
                 console.log(response, cliente);
                 Swal.fire({
@@ -488,7 +489,7 @@ export default defineComponent({
         },
         deleteClient(){
             var cliente = this.cliente;
-            axios.delete('https://gamezone-e-commerce-backend.herokuapp.com/eliminarCliente/' + cliente.idCliente).then((response) => {
+            axios.delete('https://ecommercebackend-production-2c76.up.railway.app/eliminarCliente/' + cliente.idCliente).then((response) => {
                 this
                 console.log(response);
                  Swal.fire({
@@ -505,7 +506,7 @@ export default defineComponent({
         },
         searchClienteXCarrito(){
             var cliente = this.cliente;
-            axios.get('https://gamezone-e-commerce-backend.herokuapp.com/verClienteXCarrito/' + cliente.idCarrito).then((response) => {
+            axios.get('https://ecommercebackend-production-2c76.up.railway.app/verClienteXCarrito/' + cliente.idCarrito).then((response) => {
                 this.cliente = response.data;
                 console.log(response, cliente);
                 }).catch(function(error){
@@ -519,7 +520,7 @@ export default defineComponent({
         searchCarrito(){
             var carrito = this.carrito;
             var cliente = this.cliente
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verCarritoXCliente/" + cliente.idCliente).then((response) => {
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verCarritoXCliente/" + cliente.idCliente).then((response) => {
                 this.carrito = response.data;
                 console.log(response, carrito);
                 }).catch(function(error){
@@ -532,7 +533,7 @@ export default defineComponent({
         },
         allClientes(){
             this.clientes_list = [];
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verClientes").then((response) => {this.clientes_list = response.data}).catch(function(error){
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verClientes").then((response) => {this.clientes_list = response.data}).catch(function(error){
                 console.log(error);
                 Swal.fire({
                     icon: 'error',

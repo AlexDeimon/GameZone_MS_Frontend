@@ -253,6 +253,7 @@ import { storage } from '../firebase';
 import { ref,  uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage'
 import Swal from 'sweetalert2';
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: "Productos",
     data: function(){
         return{
@@ -309,7 +310,7 @@ export default defineComponent({
         createProduct(){
             var product = this.product;
             product.id = (Math.random().toString(10).slice(-4)).toString();
-            axios.post("https://gamezone-e-commerce-backend.herokuapp.com/agregarProducto", product).then((response) => {
+            axios.post("https://ecommercebackend-production-2c76.up.railway.app/agregarProducto", product).then((response) => {
                 this
                 console.log(response, product);
                 const refImg = ref(storage,'imagenes/'+this.product.id );
@@ -328,7 +329,7 @@ export default defineComponent({
         },
         searchProduct(){
             var product = this.product;
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verProducto/" + product.producto).then((response) => {
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verProducto/" + product.producto).then((response) => {
                 this.product = response.data;
                 getDownloadURL(ref(storage, 'imagenes/'+this.product.id)).then((url) => {
                     this.imagenDesc = url;
@@ -344,7 +345,7 @@ export default defineComponent({
         },
         updateProduct(){
             var product = this.product;
-            axios.put(`https://gamezone-e-commerce-backend.herokuapp.com/actualizarProducto/${product.id}`, product).then((response) => {
+            axios.put(`https://ecommercebackend-production-2c76.up.railway.app/actualizarProducto/${product.id}`, product).then((response) => {
                 this
                 console.log(response, product);
                 Swal.fire({
@@ -361,11 +362,11 @@ export default defineComponent({
         },
         deleteProduct(){
             var product = this.product;
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verProducto/" + product.producto).then((response) => {
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verProducto/" + product.producto).then((response) => {
                 this.product = response.data;
                 const refImg = ref(storage,'imagenes/'+this.product.id );
                 deleteObject(refImg).then(e => console.log(e));
-                axios.delete('https://gamezone-e-commerce-backend.herokuapp.com/eliminarProducto/' + product.producto).then((response) => {
+                axios.delete('https://ecommercebackend-production-2c76.up.railway.app/eliminarProducto/' + product.producto).then((response) => {
                     this
                     console.log(response);
                     Swal.fire({
@@ -391,7 +392,7 @@ export default defineComponent({
         productsByCategory(){
             var product = this.product
             this.productList = [];
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verProductos/" + product.categoria).then((response) => {this.productList = response.data}).catch(function(error){
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verProductos/" + product.categoria).then((response) => {this.productList = response.data}).catch(function(error){
                 console.log(error);
                 Swal.fire({
                     icon: 'error',
@@ -401,7 +402,7 @@ export default defineComponent({
         },
         allProducts(){
             this.productList = [];
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verProductos").then((response) => {this.productList = response.data}).catch(function(error){
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verProductos").then((response) => {this.productList = response.data}).catch(function(error){
                 console.log(error);
                 Swal.fire({
                     icon: 'error',

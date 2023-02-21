@@ -202,15 +202,13 @@ const router = createRouter({
 export default router
 ```
 ## Componente web desplegado ✅
-El despliegue del componente web se realizó en Heroku y se puede acceder a este mediante la URL https://gamezone-ms-app.herokuapp.com
+El despliegue del componente web se realizó en Firebase y se puede acceder a este mediante la URL https://gamezone-e-comemerce.web.app
 
 ## Herramientas utilizadas 🛠️
-- Firebase - SDK de Firebase para poder realizar procesos de autenticación de usuario y almacenamiento de archivos.
+- Firebase - SDK de Firebase para poder realizar procesos de autenticación de usuario, almacenamiento de archivos y despliegue mediante hosting.
 - node - Manejador de dependencias del proyecto.
 - Vue.js - Framework de JavaScript utilizado.
 - router - Librería para la gestión de rutas del proyecto.
 - sweetalert - Librería para mejora de las alertas del proyecto.
 - Bootstrap - Framework de CSS utilizado.
 - Axios - Librería para realizar las peticiones a la API Rest del backend.
-- Docker - Herramienta para crear contenedor del proyecto haciendo más facil su despliegue y ejecución.
-- Heroku - Plataforma como servicio (PaaS) utilizada para desplegar el componente web en la nube.

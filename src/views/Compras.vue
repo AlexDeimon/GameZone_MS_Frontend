@@ -121,11 +121,12 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script>
 import axios from 'axios';
 import { defineComponent } from 'vue';
 import Swal from 'sweetalert2';
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: "Compras",
     data: function(){
         return{
@@ -147,7 +148,7 @@ export default defineComponent({
             var compra = this.compra;
             var nuevaFecha = new Date();
             compra.fecha = `${nuevaFecha}`
-            axios.post("https://gamezone-e-commerce-backend.herokuapp.com/agregarCompra/"+ (Math.random().toString(10).slice(-4)).toString() +"/"+ compra.idCliente, compra).then((response) => {
+            axios.post("https://ecommercebackend-production-2c76.up.railway.app/agregarCompra/"+ (Math.random().toString(10).slice(-4)).toString() +"/"+ compra.idCliente, compra).then((response) => {
                 this
                 console.log(response, compra);
                  Swal.fire({
@@ -164,7 +165,7 @@ export default defineComponent({
         },
         deleteCompra(){
             var compra = this.compra;
-            axios.delete('https://gamezone-e-commerce-backend.herokuapp.com/borrarCompra/' + compra.id).then((response) => {
+            axios.delete('https://ecommercebackend-production-2c76.up.railway.app/borrarCompra/' + compra.id).then((response) => {
                 this
                 console.log(response);
                  Swal.fire({
@@ -181,7 +182,7 @@ export default defineComponent({
         },
         searchCompra(){
             var compra = this.compra;
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verCompraXCliente/" + compra.idCliente).then((response) => {
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verCompraXCliente/" + compra.idCliente).then((response) => {
                 this.compra = response.data;
                 console.log(response, compra);
                 }).catch(function(error){
@@ -194,7 +195,7 @@ export default defineComponent({
         },
         comprasByFecha(){
             var compra = this.compra;
-            axios.get('https://gamezone-e-commerce-backend.herokuapp.com/verComprasXFecha/' + compra.fecha).then((response) => {this.compras_list = response.data}).catch(function(error){
+            axios.get('https://ecommercebackend-production-2c76.up.railway.app/verComprasXFecha/' + compra.fecha).then((response) => {this.compras_list = response.data}).catch(function(error){
                 console.log(error);
                 Swal.fire({
                     icon: 'error',
@@ -204,7 +205,7 @@ export default defineComponent({
         },
         allCompras(){
             this.compras_list = [];
-            axios.get("https://gamezone-e-commerce-backend.herokuapp.com/verCompras").then((response) => {this.compras_list = response.data}).catch(function(error){
+            axios.get("https://ecommercebackend-production-2c76.up.railway.app/verCompras").then((response) => {this.compras_list = response.data}).catch(function(error){
                 console.log(error);
                 Swal.fire({
                     icon: 'error',

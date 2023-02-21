@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Auth
   }, 
   {
-    path: '/Home',
+    path: '/Home/:username',
     name: "Home",
     component: Home
   },

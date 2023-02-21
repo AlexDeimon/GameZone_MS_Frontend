@@ -58,6 +58,7 @@ import Swal from 'sweetalert2';
 import {auth} from '../firebase'
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: "Auth",
     data: function(){
         return {
