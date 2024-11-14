@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "gamezone-ms",
     "public": "dist",
     "ignore": [
       "firebase.json",

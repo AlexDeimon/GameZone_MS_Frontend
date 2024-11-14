@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Auth from '../views/Auth.vue';
 import Home from '../views/Home.vue';
+import Categorias from '../views/Categoria.vue';
 import Productos from '../views/Productos.vue';
-import Carrito from '../views/Carrito.vue';
+import Carritos from '../views/Carrito.vue';
 import Clientes from '../views/Clientes.vue';
 import Compras from '../views/Compras.vue';
 import App from '../App.vue';
@@ -24,14 +25,19 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
+    path: "/Categorias",
+    name: "Categorias",
+    component: Categorias
+  },
+  {
     path: "/Productos",
     name: "Productos",
     component: Productos
   },
   {
-    path: "/Carrito",
-    name: "Carrito",
-    component: Carrito
+    path: "/Carritos",
+    name: "Carritos",
+    component: Carritos
   },
   {
     path: "/Clientes",

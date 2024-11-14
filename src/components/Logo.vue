@@ -1,6 +1,6 @@
 <template>
   <router-link to="/" class="link">
-    <h1 class="titulo1"><span class="resaltado">Game</span> Zone <span class="resaltado">2.0</span></h1>
+    <h1 class="titulo1"><span class="resaltado">Game</span> Zone <span class="resaltado">3.0</span></h1>
     <img src="https://i.imgur.com/mYxzx5S.jpg" alt="Gamezone img" class="img">
   </router-link>
 </template>
@@ -17,11 +17,11 @@ export default defineComponent({
   margin: 0;
   text-align: center;
   font-family: "Bangers", cursive;
-  color: white;
+  color: #35495e;
   font-size: xx-large;
 }
 .resaltado {
-  color: red;
+  color: #42b883;
 }
 .img {
   max-width: max-content;
