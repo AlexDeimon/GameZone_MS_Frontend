@@ -90,6 +90,7 @@ main {
   background-color: black;
   display: flex;
   width: 100%;
+  min-height: 7.5vh;
   justify-content: space-between;
   align-items: center;
 }
@@ -153,6 +154,7 @@ main {
 }
 .footer {
   display: flex;
+  min-height: 7.5vh;
   justify-content: center;
   align-items: center;
   background-color: black;
@@ -210,7 +212,6 @@ main {
 }
 .link,
 .nav-menu_button {
-  margin: 1%;
   text-decoration: none;
   display: inline-block;
 }
