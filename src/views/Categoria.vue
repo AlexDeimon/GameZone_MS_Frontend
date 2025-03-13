@@ -44,9 +44,19 @@
                         <form @submit.prevent="eliminarCategoria()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-1"><i class="fas fa-tasks"></i></span>
-                                <select class="form-select" v-model="categoria.nombre">
-                                    <option v-for="categoria in nombres_categorias" v-bind:key="categoria">{{ categoria.nombre }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="categoriaSelect"
+                                    :key="nombres_categorias.length" 
+                                    v-model="categoria.nombre" 
+                                    class="form-control vue-select" 
+                                    :options="nombres_categorias" 
+                                    placeholder="Seleccione una categoría"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="reiniciarInput"
+                                ></vue-next-select>
                             </div>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch" id="eliminaProductos" v-model="eliminaProductos">
@@ -85,9 +95,14 @@ import { storage } from '../firebase';
 import { ref, deleteObject } from 'firebase/storage';
 import Swal from 'sweetalert2';
 import api from '../ApiConfig';
+import VueNextSelect from 'vue-next-select';
+import 'vue-next-select/dist/index.css';
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Categorias",
+    components: {
+        VueNextSelect
+    },
     data() {
         return {
             categoria: {
@@ -100,9 +115,11 @@ export default defineComponent({
     },
     methods: {
         limpiarCampos() {
-            this.categoria = {
-                nombre: ""
-            }
+            this.categoria.nombre = "";
+            this.nombres_categorias = [];
+            this.$nextTick(() => {
+                document.querySelector(".vue-input input").value = "";
+            });
         },
         mostrarAlerta(icon, title) {
             Swal.fire({ icon, title });
@@ -127,12 +144,11 @@ export default defineComponent({
                 if (tipo === 'todo') {
                     this.categorias_list = response.data;
                 } else if (tipo === 'nombres') {
-                    this.nombres_categorias = [];
-                    response.data.length > 0 ? this.nombres_categorias = response.data : this.nombres_categorias.push({ nombre: "No hay categorías" });
-                } else {
-                    this.categorias_list = response.data;
-                    this.nombres_categorias = response.data;
-                }
+                    this.nombres_categorias = response.data.map(cat => cat.nombre);
+                    if (this.nombres_categorias.length === 0) {
+                        this.nombres_categorias.push("No hay categorías");
+                    }
+                } 
             } catch (error) {
                 console.log(error);
             }
@@ -141,6 +157,7 @@ export default defineComponent({
             try {
                 if (!this.categoria.nombre.trim()) {
                     this.mostrarAlerta('warning', 'Seleccione una categoria');
+                    this.obtenerCategorias('nombres');
                     this.limpiarCampos();
                     return;
                 }
@@ -163,14 +180,28 @@ export default defineComponent({
                 }
                 const response = await api.delete(url);
                 this.mostrarAlerta('success', response.data.message);
-                this.obtenerCategorias()
+                this.obtenerCategorias('todo');
+                this.obtenerCategorias('nombres');
                 this.limpiarCampos();
             } catch (error) {
                 console.log(error);
                 this.mostrarAlerta('error', error.response.data.message);
                 this.limpiarCampos();
             }
+        },
+        reiniciarInput() {
+            this.$nextTick(() => {
+            const input = document.querySelector('.vue-input input');
+            if (input) {
+                input.value = input.placeholder;
+                }
+            });
         }
     }
 });
 </script>
+<style>
+.vue-dropdown {
+    max-height: 70px !important
+}
+</style>
