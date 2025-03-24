@@ -14,11 +14,37 @@
                 <span class="icon"><i class="fas fa-trash"></i></span>
             </button>
             <div class="input-group mb-3 input-group-search">
-                <input type="search" placeholder="Nombre del producto" required v-model="producto.producto">
+                <vue-next-select
+                    ref="productosSelect"
+                    :key="nombres_productos.length" 
+                    v-model="producto.producto" 
+                    class="form-control vue-select" 
+                    :options="nombres_productos" 
+                    placeholder="Seleccione un producto"
+                    :filterable="true" 
+                    :searchable="true" 
+                    :clearable="true"
+                    close-on-select
+                    @update:modelValue="reiniciarInput"
+                    @click="obtenerProductos('nombres')"
+                ></vue-next-select>
                 <button class="btn btn-primary" type="button" @:click="obtenerProducto(true)"><i class="fas fa-search"></i></button>
             </div>
             <div class="input-group mb-3 input-group-search">
-                <input type="search" placeholder="Productos por categoria" required v-model="producto.categoria">
+                <vue-next-select
+                    ref="categoriasSelect"
+                    :key="categorias_list.length"
+                    class="form-control vue-select" 
+                    :options="categorias_list"
+                    v-model="producto.categoria" 
+                    placeholder="Seleccione una categoria"
+                    :filterable="true" 
+                    :searchable="true" 
+                    :clearable="true"
+                    close-on-select
+                    @update:modelValue="reiniciarInput"
+                    @click="obtenerCategorias"
+                ></vue-next-select>
                 <button class="btn btn-primary" @click="obtenerProductosPorCategoria()"><i class="fas fa-search"></i></button>
             </div>
             <button class="btn btn-primary btn-crud" @:click="obtenerProductos('todo')">
@@ -86,9 +112,19 @@
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-2"><i class="fas fa-tasks"></i></span>
-                                <select class="form-select" v-model="producto.categoria">
-                                    <option v-for="categoria in categorias_list" v-bind:key="categoria">{{ categoria.nombre }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="categoriasSelect"
+                                    :key="categorias_list.length"
+                                    class="form-control vue-select" 
+                                    :options="categorias_list"
+                                    v-model="producto.categoria" 
+                                    placeholder="Seleccione una categoria"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="reiniciarInput"
+                                ></vue-next-select>
                             </div>
                             <div class="input-group mb-3 dropZone2" ref="dropZone">
                                 <span class="input-group-text input-group-text-2"><i class="fas fa-file-image"></i></span>
@@ -114,12 +150,23 @@
                     <div class="modal-body d-flex justify-content-center ">
                         <form @:submit.prevent="actualizarProducto()">
                             <div class="input-group mb-3">
-                                <select class="form-select" v-model="producto.producto" ref="productoActualizar">
-                                    <option v-for="producto in nombres_productos" v-bind:key="producto.producto">{{ producto }}</option>
-                                </select>
-                                <button class="btn btn-warning" type="button"><i class="fas fa-search" @:click="obtenerProducto(false)"></i></button>
+                                <vue-next-select
+                                    ref="productoActualizar"
+                                    :key="nombres_productos.length" 
+                                    v-model="producto.producto" 
+                                    class="form-control vue-select" 
+                                    :options="nombres_productos" 
+                                    placeholder="Seleccione un producto"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    :disabled="isSelectDisabled"
+                                    close-on-select
+                                    @update:modelValue="reiniciarInput('Actualizar')"
+                                ></vue-next-select>
+                                <button class="btn btn-warning" type="button" @:click="obtenerProducto(false)"><i class="fas fa-search"></i></button>
                             </div>
-                            <div ref="actualizarProductoForm">
+                            <div ref="actualizarProductoForm" style="display: none;">
                                 <div class="input-group mb-3">
                                     <span class="input-group-text input-group-text-4"><i class="fas fa-align-justify"></i></span>
                                     <textarea class="form-control" placeholder="Descripción" v-model="producto.descripcion" required></textarea>
@@ -134,9 +181,19 @@
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text input-group-text-4"><i class="fas fa-tasks"></i></span>
-                                    <select class="form-select" v-model="producto.categoria">
-                                        <option v-for="categoria in categorias_list" v-bind:key="categoria">{{ categoria.nombre }}</option>
-                                    </select>
+                                    <vue-next-select
+                                    ref="categoriasSelect"
+                                    :key="categorias_list.length"
+                                    class="form-control vue-select" 
+                                    :options="categorias_list"
+                                    v-model="producto.categoria" 
+                                    placeholder="Seleccione una categoria"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="reiniciarInput"
+                                ></vue-next-select>
                                 </div>
                                 <button class="btn btn-warning" type="submit">Actualizar</button>    
                             </div>
@@ -157,9 +214,19 @@
                         <form @:submit.prevent="eliminarProducto()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-1"><i class="fas fa-gamepad"></i></span>
-                                <select class="form-select" v-model="producto.producto">
-                                    <option v-for="producto in nombres_productos" v-bind:key="producto.producto">{{ producto }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="productosSelect"
+                                    :key="nombres_productos.length" 
+                                    v-model="producto.producto" 
+                                    class="form-control vue-select" 
+                                    :options="nombres_productos" 
+                                    placeholder="Seleccione un producto"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="reiniciarInput"
+                                ></vue-next-select>
                             </div>
                             <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
@@ -196,9 +263,14 @@ import { ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage
 import { Modal } from 'bootstrap';
 import Swal from 'sweetalert2';
 import api from '../ApiConfig';
+import VueNextSelect from 'vue-next-select';
+import 'vue-next-select/dist/index.css';
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Productos",
+    components: {
+        VueNextSelect
+    },
     data: function () {
         return {
             producto: {
@@ -213,7 +285,8 @@ export default defineComponent({
             categorias_list: [],
             nombres_productos: [],
             imagen: null,
-            imagenDesc: null
+            imagenDesc: null,
+            isSelectDisabled: false
         }
     },
     methods: {
@@ -228,8 +301,23 @@ export default defineComponent({
             }
             this.imagen = null
             this.imagenDesc = null
+            this.isSelectDisabled = false
             this.dragLeave();
-            this.$refs.productoActualizar.disabled = false;
+            if (this.$refs.actualizarProductoForm) {
+                this.$refs.actualizarProductoForm.style.display = "none";
+            }
+            this.nombres_productos = [];
+            this.categorias_list = [];
+            this.$nextTick(() => {
+                if (this.$refs.productoActualizar) {
+                    this.$refs.productoActualizar.clearValue();
+                }
+                const inputs = document.querySelectorAll('.vue-input input');
+                inputs.forEach(input => {
+                    if (input) input.value = "";
+                });
+            });
+            this.obtenerProductos('nombres');
         },
         mostrarAlerta(icon, title) {
             Swal.fire({ icon, title });
@@ -342,8 +430,11 @@ export default defineComponent({
                     const modalInstance = new Modal(this.$refs.obtenerproductoModal);
                     modalInstance.show();
                 } else {
-                    this.$refs.productoActualizar.disabled = true;
-                    this.$refs.actualizarProductoForm.style.display = "block";
+                    if (this.$refs.actualizarProductoForm) {
+                        this.$refs.actualizarProductoForm.style.display = "block";
+                        this.isSelectDisabled = true;
+                        await this.obtenerCategorias();
+                    }
                 }
             } catch (error) {
                 console.log(error);
@@ -364,7 +455,6 @@ export default defineComponent({
                 this.mostrarAlerta('success', `Se ha actualizado el producto ${this.producto.producto}`);
                 this.obtenerProductos();
                 this.limpiarCampos();
-                this.$refs.actualizarProductoForm.style.display = "none";
             } catch (error) {
                 console.log(error);
                 this.mostrarAlerta('error', error.response.data.message);
@@ -397,10 +487,27 @@ export default defineComponent({
             try {
                 const response = await api.get("categorias");
                 this.categorias_list = [];
-                response.data.length > 0 ? this.categorias_list = response.data : this.categorias_list.push({ nombre: "No hay categorías" });
+                response.data.length > 0 ? this.categorias_list = response.data.map(categoria => categoria.nombre) : this.categorias_list.push({ nombre: "No hay categorías" });
             } catch (error) {
                 console.log(error);
             }
+        },
+        reiniciarInput(tipo) {
+            this.$nextTick(() => {
+                if (tipo === 'Actualizar') {
+                    const input = this.$refs.productoActualizar.$el.querySelector('.vue-input input');
+                    if (input && this.producto.producto) {
+                        input.value = this.producto.producto;
+                    }
+                } else {
+                    const inputs = document.querySelectorAll('.vue-input input');
+                    inputs.forEach(input => {
+                        if (input && input.value !== input.placeholder) {
+                            input.value = input.placeholder;
+                        }
+                    });
+                }
+            });
         }
     }
 });
