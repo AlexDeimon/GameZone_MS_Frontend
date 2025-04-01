@@ -18,11 +18,37 @@
                 <span class="icon"><i class="fas fa-times"></i></span>
             </button>
             <div class="input-group mb-3 input-group-search">
-                <input type="search" placeholder="ID del carrito" required v-model="carrito._id">
+                <vue-next-select
+                    ref="carritosSelect"
+                    :key="ids_carritos.length"
+                    class="form-control vue-select" 
+                    :options="ids_carritos"
+                    v-model="carrito._id" 
+                    placeholder="Seleccione un Id de carrito"
+                    :filterable="true" 
+                    :searchable="true" 
+                    :clearable="true"
+                    close-on-select
+                    @update:modelValue="(value) => reiniciarInput(value, 'carritos')"
+                    @click="obtenerCarritos('ids')"
+                ></vue-next-select>
                 <button class="btn btn-primary" type="button" @click="obtenerCarrito()"><i class="fas fa-search"></i></button>
             </div>
             <div class="input-group mb-3 input-group-search">
-                <input type="search" placeholder="Carritos por ID Cliente" required v-model="carrito.idCliente">
+                <vue-next-select
+                    ref="clienteSelect"
+                    :key="clientes_ids.length"
+                    class="form-control vue-select" 
+                    :options="clientes_ids"
+                    v-model="carrito.idCliente" 
+                    placeholder="Seleccione un Id de cliente"
+                    :filterable="true" 
+                    :searchable="true" 
+                    :clearable="true"
+                    close-on-select
+                    @update:modelValue="(value) => reiniciarInput(value, 'clientes')"
+                    @click="obtenerClientes"
+                ></vue-next-select>
                 <button class="btn btn-primary" type="button" @:click="obtenerCarritosXCliente()"><i class="fas fa-search"></i></button>
             </div>
             <button class="btn btn-primary btn-crud" @click="obtenerCarritos('todo')">
@@ -75,15 +101,35 @@
                         <form @submit.prevent="agregarProducto()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-2"><i class="fas fa-barcode"></i></span>
-                                <select class="form-select" v-model="carrito._id">
-                                    <option v-for="id in ids_carritos" v-bind:key="id">{{ id }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="carritosSelect"
+                                    :key="ids_carritos.length"
+                                    class="form-control vue-select" 
+                                    :options="ids_carritos"
+                                    v-model="carrito._id" 
+                                    placeholder="Seleccione un Id de carrito"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'carritos')"
+                                ></vue-next-select>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-2"><i class="fas fa-gamepad"></i></span>
-                                <select class="form-select" v-model="producto.producto">
-                                    <option v-for="producto in productos_list" v-bind:key="producto.producto">{{ producto }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="productosSelect"
+                                    :key="productos_list" 
+                                    v-model="producto.producto" 
+                                    class="form-control vue-select" 
+                                    :options="productos_list" 
+                                    placeholder="Seleccione un producto"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'productos')"
+                                ></vue-next-select>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-2"><i class="fas fa-shopping-cart"></i></span>
@@ -106,15 +152,35 @@
                         <form @submit.prevent="borrarProducto()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-1"><i class="fas fa-barcode"></i></span>
-                                <select class="form-select" v-model="carrito._id">
-                                    <option v-for="id in ids_carritos" v-bind:key="id">{{ id }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="carritosSelect"
+                                    :key="ids_carritos.length"
+                                    class="form-control vue-select" 
+                                    :options="ids_carritos"
+                                    v-model="carrito._id" 
+                                    placeholder="Seleccione un Id de carrito"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'carritos')"
+                                ></vue-next-select>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-1"><i class="fas fa-gamepad"></i></span>
-                                <select class="form-select" v-model="producto.producto">
-                                    <option v-for="producto in productos_list" v-bind:key="producto.producto">{{ producto }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="productosSelect"
+                                    :key="productos_list" 
+                                    v-model="producto.producto" 
+                                    class="form-control vue-select" 
+                                    :options="productos_list" 
+                                    placeholder="Seleccione un producto"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'productos')"
+                                ></vue-next-select>
                             </div>
                             <button class="btn btn-danger" type="submit">Remover</button>
                         </form>
@@ -133,9 +199,19 @@
                         <form @submit.prevent="eliminarCarrito()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-1"><i class="fas fa-barcode"></i></span>
-                                <select class="form-select" v-model="carrito._id">
-                                    <option v-for="id in ids_carritos" v-bind:key="id">{{ id }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="carritosSelect"
+                                    :key="ids_carritos.length"
+                                    class="form-control vue-select" 
+                                    :options="ids_carritos"
+                                    v-model="carrito._id" 
+                                    placeholder="Seleccione un Id de carrito"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'carritos')"
+                                ></vue-next-select>
                             </div>
                             <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
@@ -173,9 +249,14 @@ import { defineComponent } from 'vue';
 import { Modal } from 'bootstrap';
 import Swal from 'sweetalert2';
 import api from '../ApiConfig';
+import VueNextSelect from 'vue-next-select';
+import 'vue-next-select/dist/index.css';
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Carritos",
+    components: {
+        VueNextSelect
+    },
     data: function () {
         return {
             producto: {
@@ -193,7 +274,8 @@ export default defineComponent({
             cantidadProducto: "",
             carritos_list: [],
             ids_carritos: [],
-            productos_list: []
+            productos_list: [],
+            clientes_ids: [],
         }
     },
     methods: {
@@ -212,6 +294,14 @@ export default defineComponent({
                 cantidadCarrito: 0
             };
             this.cantidadProducto = "";
+            this.ids_carritos = [];
+            this.productos_list = [];
+            this.$nextTick(() => {
+                const inputs = document.querySelectorAll('.vue-input input');
+                inputs.forEach(input => {
+                    if (input) input.value = "";
+                });
+            });
         },
         mostrarAlerta(icon, title) {
             Swal.fire({ icon, title });
@@ -352,6 +442,57 @@ export default defineComponent({
             } catch (error) {
                 console.log(error);
             }
+        },
+        async obtenerClientes(){
+            try{
+                const response = await api.get('/clientes');
+                this.clientes_ids = [];
+                response.data.length > 0 ? this.clientes_ids = response.data.map(cliente => cliente._id) : this.clientes_ids.push("No hay clientes");
+                return;
+            }catch(error){
+                console.log(error);
+            }
+        },
+        reiniciarInput(value, source) {
+            this.$nextTick(() => {
+                const modals = ['añadirproducto', 'eliminarcarrito', 'removerproducto'];
+                if (source === 'carritos') {
+                    const mainCarritoInput = document.querySelector('.input-group-search:first-of-type .vue-input input');
+                    if (mainCarritoInput) {
+                        mainCarritoInput.value = value || '';
+                        mainCarritoInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                
+                    modals.forEach(modalId => {
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            const carritoInput = modal.querySelector('.input-group:first-child .vue-input input');
+                            if (carritoInput) {
+                                carritoInput.value = value || '';
+                            }
+                        }
+                    });
+                }
+                if (source === 'productos') {
+                    modals.forEach(modalId => {
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            const productoInput = modal.querySelector('.input-group:nth-child(2) .vue-input input');
+                            if (productoInput) {
+                                productoInput.value = value || '';
+                                productoInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+                        }
+                    });
+                }
+                if (source === 'clientes') {
+                    const clienteInput = document.querySelector('.input-group-search:nth-of-type(2) .vue-input input');
+                    if (clienteInput) {
+                        clienteInput.value = value || '';
+                        clienteInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+            });
         }
     }
 });
