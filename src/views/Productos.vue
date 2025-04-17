@@ -277,8 +277,8 @@ export default defineComponent({
                 _id: "",
                 producto: "",
                 descripcion: "",
-                precio: 0,
-                stock: 0,
+                precio: "",
+                stock: "",
                 categoria: ""
             },
             productos_list: [],
@@ -295,8 +295,8 @@ export default defineComponent({
                 _id: "",
                 producto: "",
                 descripcion: "",
-                precio: 0,
-                stock: 0,
+                precio: "",
+                stock: "",
                 categoria: ""
             }
             this.imagen = null

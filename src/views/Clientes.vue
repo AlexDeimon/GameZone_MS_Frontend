@@ -14,7 +14,20 @@
                 <span class="icon"><i class="fas fa-trash"></i></span>
             </button>
             <div class="input-group mb-3 input-group-search">
-                <input type="search" placeholder="ID cliente" required v-model="cliente._id">
+                <vue-next-select
+                    ref="clienteSelect"
+                    :key="clientes_ids.length"
+                    class="form-control vue-select" 
+                    :options="clientes_ids"
+                    v-model="cliente._id" 
+                    placeholder="Seleccione un Id de cliente"
+                    :filterable="true" 
+                    :searchable="true" 
+                    :clearable="true"
+                    close-on-select
+                    @update:modelValue=" (value) => reiniciarInput(value)"
+                    @click="obtenerClientes('ids')"
+                ></vue-next-select>
                 <button class="btn btn-primary" type="button" @:click="obtenerCliente(true)"><i class="fas fa-search"></i></button>
             </div>
             <button class="btn btn-primary btn-crud" @:click="obtenerClientes('todo')">
@@ -107,12 +120,23 @@
                     <div class="modal-body d-flex justify-content-center">
                         <form @:submit.prevent="actualizarCliente()">
                             <div class="input-group  mb-3">
-                                <select class="form-select" v-model="cliente._id" ref="clienteActualizar">
-                                    <option v-for="id in clientes_ids" v-bind:key="id">{{ id }}</option>
-                                </select>
-                                <button class="btn btn-warning" type="button"><i class="fas fa-search" @:click="obtenerCliente(false)"></i></button>
+                                <vue-next-select
+                                    ref="clienteActualizar"
+                                    :key="clientes_ids.length"
+                                    class="form-control vue-select" 
+                                    :options="clientes_ids"
+                                    v-model="cliente._id" 
+                                    placeholder="Seleccione un Id de cliente"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    :disabled="isSelectDisabled"
+                                    close-on-select
+                                    @update:modelValue="reiniciarInput('Actualizar')"
+                                ></vue-next-select>
+                                <button class="btn btn-warning" type="button" @:click="obtenerCliente(false)"><i class="fas fa-search"></i></button>
                             </div>
-                            <div ref="clienteActualizarForm">
+                            <div ref="clienteActualizarForm" style="display: none;">
                                 <div class="input-group mb-3">
                                     <span class="input-group-text input-group-text-4"><i class="fas fa-user"></i></span>
                                     <input type="text" class="form-control " placeholder="Nombre" required v-model="cliente.nombre">
@@ -151,9 +175,19 @@
                         <form @:submit.prevent="eliminarCliente()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-1"><i class="fas fa-id-card"></i></span>
-                                <select class="form-select" v-model="cliente._id">
-                                    <option v-for="id in clientes_ids" v-bind:key="id">{{ id }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="clienteEliminar"
+                                    :key="clientes_ids.length"
+                                    class="form-control vue-select" 
+                                    :options="clientes_ids"
+                                    v-model="cliente._id" 
+                                    placeholder="Seleccione un Id de cliente"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="reiniciarInput"
+                                ></vue-next-select>
                             </div>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch" id="eliminaCompras" v-model="eliminaCompras">
@@ -192,9 +226,14 @@ import { defineComponent } from 'vue';
 import { Modal } from 'bootstrap';
 import api from '../ApiConfig';
 import Swal from 'sweetalert2';
+import VueNextSelect from 'vue-next-select';
+import 'vue-next-select/dist/index.css';
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Clientes",
+    components: {
+        VueNextSelect
+    },
     data: function(){
         return{
             cliente: {
@@ -215,7 +254,8 @@ export default defineComponent({
             clientes_list: [],
             ids_carritos: [],
             clientes_ids: [],
-            eliminaCompras: false
+            eliminaCompras: false,
+            isSelectDisabled: false
         }
     },
     methods: {
@@ -235,7 +275,17 @@ export default defineComponent({
                 productos: [],
                 precioTotal: ""
             };
-            this.$refs.clienteActualizar.disabled = false;
+            this.isSelectDisabled = false;
+            this.clientes_ids = [];
+            this.$nextTick(() => {
+                const inputs = document.querySelectorAll('.vue-input input');
+                inputs.forEach(input => {
+                    if (input) input.value = "";
+                });
+            });
+            if (this.$refs.clienteActualizarForm) {
+                this.$refs.clienteActualizarForm.style.display = "none";
+            }
         },
         mostrarAlerta(icon, title) {
             Swal.fire({ icon, title });
@@ -249,7 +299,6 @@ export default defineComponent({
                     this.clientes_ids = [];
                     response.data.length > 0 ? this.clientes_ids = response.data.map(cliente => cliente._id) : this.clientes_ids.push("No hay clientes");
                     this.obtenerCarritos();
-                    this.$refs.clienteActualizarForm.style.display = "none";
                     return;
                 }else{
                     this.clientes_list = response.data;
@@ -293,8 +342,10 @@ export default defineComponent({
                     const modalInstance = new Modal(this.$refs.obtenerclienteModal);
                     modalInstance.show();
                 } else {
-                    this.$refs.clienteActualizar.disabled = true;
-                    this.$refs.clienteActualizarForm.style.display = "block";
+                    if(this.$refs.clienteActualizarForm) {
+                        this.isSelectDisabled = true;
+                        this.$refs.clienteActualizarForm.style.display = "block";
+                    }
                 }
             } catch (error) {
                 console.log(error);
@@ -322,7 +373,6 @@ export default defineComponent({
                 this.mostrarAlerta('success', `Se ha actualizado el cliente ${this.cliente.nombre} ${this.cliente.apellidos}`);
                 this.obtenerClientes();
                 this.limpiarCampos();
-                this.$refs.clienteActualizarForm.style.display = "none";
             } catch (error) {
                 console.log(error);
                 this.mostrarAlerta('error', error.response.data.message);
@@ -392,7 +442,21 @@ export default defineComponent({
             } catch (error) {
                 console.log(error);
             }
+        },
+        reiniciarInput(tipo) {
+            this.$nextTick(() => {
+                let input;
+                if (tipo === 'Actualizar') {
+                    input = this.$refs.clienteActualizar.$el.querySelector('.vue-input input');
+                } else {
+                    input = this.$refs.clienteEliminar.$el.querySelector('.vue-input input');
+                }
+                if (input && this.cliente._id) {
+                    input.value = this.cliente._id;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
         }
-    }
+    },
 });
 </script>
