@@ -10,7 +10,20 @@
                 <span class="icon"><i class="fas fa-trash"></i></span>
             </button>
             <div class="input-group mb-3 input-group-search">
-                <input type="search" placeholder="Compras por ID Cliente" required v-model="compra.idCliente">
+                <vue-next-select
+                    ref="clienteSelect"
+                    :key="ids_clientes.length"
+                    class="form-control vue-select" 
+                    :options="ids_clientes"
+                    v-model="compra.idCliente" 
+                    placeholder="Seleccione un Id de cliente"
+                    :filterable="true" 
+                    :searchable="true" 
+                    :clearable="true"
+                    close-on-select
+                    @update:modelValue="(value) => reiniciarInput(value, 'clientes')"
+                    @click="obtenerClientes"
+                ></vue-next-select>
                 <button class="btn btn-primary" type="button" @:click="obtenerComprasXCliente()"><i class="fas fa-search"></i></button>
             </div>
             <div class="input-group mb-3 input-group-search">
@@ -33,15 +46,35 @@
                         <form @:submit.prevent="agregarCompra()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-2"><i class="fas fa-id-card"></i></span>
-                                <select class="form-select" v-model="compra.idCliente">
-                                    <option v-for="id in ids_clientes" v-bind:key="id">{{ id }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="clienteSelect"
+                                    :key="ids_clientes.length"
+                                    class="form-control vue-select" 
+                                    :options="ids_clientes"
+                                    v-model="compra.idCliente" 
+                                    placeholder="Seleccione un Id de cliente"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'clientes')"
+                                ></vue-next-select>
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-2"><i class="fas fa-barcode"></i></span>
-                                <select class="form-select" v-model="compra.carrito._id">
-                                    <option v-for="id in ids_carritos" v-bind:key="id">{{ id }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="carritosSelect"
+                                    :key="ids_carritos.length"
+                                    class="form-control vue-select" 
+                                    :options="ids_carritos"
+                                    v-model="compra.carrito._id" 
+                                    placeholder="Seleccione un Id de carrito"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'carritos')"
+                                ></vue-next-select>
                             </div>
                             <button class="btn btn-success" type="submit">Crear</button>
                         </form>
@@ -60,9 +93,19 @@
                         <form @:submit.prevent="eliminarCompra()">
                             <div class="input-group mb-3">
                                 <span class="input-group-text input-group-text-1"><i class="fas fa-barcode"></i></span>
-                                <select class="form-select" v-model="compra._id">
-                                    <option v-for="id in compras_ids" v-bind:key="id">{{ id }}</option>
-                                </select>
+                                <vue-next-select
+                                    ref="comprasSelect"
+                                    :key="compras_ids.length"
+                                    class="form-control vue-select" 
+                                    :options="compras_ids"
+                                    v-model="compra._id" 
+                                    placeholder="Seleccione un Id de compra"
+                                    :filterable="true" 
+                                    :searchable="true" 
+                                    :clearable="true"
+                                    close-on-select
+                                    @update:modelValue="(value) => reiniciarInput(value, 'compras')"
+                                ></vue-next-select>
                             </div>
                             <button class="btn btn-danger" type="submit" >Eliminar</button>
                         </form>
@@ -96,9 +139,14 @@
 import { defineComponent } from 'vue';
 import api from '../ApiConfig';
 import Swal from 'sweetalert2';
+import VueNextSelect from 'vue-next-select';
+import 'vue-next-select/dist/index.css';
 export default defineComponent({
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Compras",
+    components: {
+        VueNextSelect
+    },
     data: function(){
         return{
             compra: {
@@ -126,9 +174,18 @@ export default defineComponent({
                 carrito: {
                     _id: "",
                     cantidad_productos: 0,
-                    precio_total: 0
+                    precioTotal: 0
                 }
             }
+            this.$nextTick(() => {
+                const inputs = document.querySelectorAll('.vue-input input');
+                inputs.forEach(input => {
+                    if (input) input.value = "";
+                });
+            });
+            this.ids_clientes = [];
+            this.ids_carritos = [];
+            this.compras_ids = [];
         },
         mostrarAlerta(icon, title) {
             Swal.fire({ icon, title });
@@ -183,7 +240,6 @@ export default defineComponent({
                 const response = await api.get(`/compras/verComprasXFecha/${this.compra.fecha}`);
                 this.compras_list = response.data;
             } catch (error) {
-                console.log(error);
                 this.limpiarCampos();
                 this.mostrarAlerta('error', error.response.data.message);
             }
@@ -191,12 +247,13 @@ export default defineComponent({
         async obtenerComprasXCliente(){
             try {
                 if(!this.compra.idCliente.trim()){
-                    this.mostrarAlerta('warning', 'Debe ingresar un ID de cliente');
+                    this.mostrarAlerta('warning', 'Debe Seleccionar un Id de cliente');
                     this.limpiarCampos();
                     return;
                 }
                 const response = await api.get(`/compras/verComprasXCliente/${this.compra.idCliente}`);
                 this.compras_list = response.data;
+                this.limpiarCampos();
             } catch (error) {
                 console.log(error);
                 this.mostrarAlerta('error', error.response.data.message);
@@ -233,6 +290,60 @@ export default defineComponent({
             } catch (error) {
                 console.log(error);
             }
+        },
+        async obtenerClientes(){
+            try{
+                const response = await api.get('/clientes');
+                this.ids_clientes = [];
+                response.data.length > 0 ? this.ids_clientes = response.data.map(cliente => cliente._id) : this.ids_clientes.push("No hay clientes");
+                return;
+            }catch(error){
+                console.log(error);
+            }
+        },
+        reiniciarInput(value, source) {
+            this.$nextTick(() => {
+                const modals = ['crearcompra', 'eliminarcompra']
+                if (source === 'clientes') {
+                    const mainCarritoInput = document.querySelector('.input-group-search:first-of-type .vue-input input');
+                    if (mainCarritoInput) {
+                        mainCarritoInput.value = value || '';
+                        mainCarritoInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                
+                    modals.forEach(modalId => {
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            const carritoInput = modal.querySelector('.input-group:first-child .vue-input input');
+                            if (carritoInput) {
+                                carritoInput.value = value || '';
+                            }
+                        }
+                    });
+                } else if (source === 'carritos') {
+                    modals.forEach(modalId => {
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            const carritoInput = modal.querySelector('.input-group:nth-child(2) .vue-input input');
+                            if (carritoInput) {
+                                carritoInput.value = value || '';
+                                carritoInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+                        }
+                    });
+                } else if (source === 'compras') {
+                    modals.forEach(modalId => {
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            const compraInput = modal.querySelector('.input-group:first-child .vue-input input');
+                            if (compraInput) {
+                                compraInput.value = value || '';
+                                compraInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+                        }
+                    });
+                }
+            });
         }
     }
 });
